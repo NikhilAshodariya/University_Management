@@ -10,9 +10,7 @@ class TestStudent(unittest.TestCase):
         self.assertEqual(st.student_details, {
             'student_id': 1234,
             'student_name': 'ABC',
-            'student_major': {
-                'CS': {}
-            },
+            'student_major': 'CS',
             'student_courses_taken': {
                 'CS120': 'A'
             }

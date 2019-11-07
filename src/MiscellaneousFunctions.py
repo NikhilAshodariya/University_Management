@@ -10,6 +10,9 @@ def file_reading_gen(path, fields, sep=',', header=False):
         with file:
             res = []
             for index, line in enumerate(file):
+                if header:
+                    header = False
+                    continue
                 arr = line.strip("\n").split(sep)
                 if len(arr) != fields:
                     raise ValueError(
