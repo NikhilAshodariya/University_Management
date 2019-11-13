@@ -16,38 +16,41 @@ class TestUniversity(unittest.TestCase):
         stevens_university = University("Stevens_01", "Stevens Institute of Technology", BASE_URL)
         prof_list = stevens_university.prof_list_getter()
 
-        prof_98765 = prof_list["98765"].instructor_details
         prof_98764 = prof_list["98764"].instructor_details
         prof_98763 = prof_list["98763"].instructor_details
         prof_98762 = prof_list["98762"].instructor_details
-        prof_98761 = prof_list["98761"].instructor_details
-        prof_98760 = prof_list["98760"].instructor_details
 
-        expected_prof_98765 = {'instructor_id': '98765', 'instructor_name': 'Einstein, A',
-                               'instructor_dept_name': 'SFEN', 'instructor_courses': {'SSW 567': 4, 'SSW 540': 1}}
-
-        expected_prof_98764 = {'instructor_id': '98764', 'instructor_name': 'Feynman, R',
+        expected_prof_98764 = {'instructor_id': '98764', 'instructor_name': 'Cohen, R',
                                'instructor_dept_name': 'SFEN',
-                               'instructor_courses': {'SSW 564': 3, 'SSW 687': 3, 'CS 501': 1, 'CS 545': 1}}
+                               'instructor_courses': {'CS 546': 1}}
 
-        expected_prof_98763 = {'instructor_id': '98763', 'instructor_name': 'Newton, I', 'instructor_dept_name': 'SFEN',
-                               'instructor_courses': {'SSW 555': 1}}
+        expected_prof_98763 = {'instructor_id': '98763', 'instructor_name': 'Rowland, J', 'instructor_dept_name': 'SFEN',
+                               'instructor_courses': {'SSW 810': 4, 'SSW 555': 1}}
 
         expected_prof_98762 = {'instructor_id': '98762', 'instructor_name': 'Hawking, S',
-                               'instructor_dept_name': 'SYEN', 'instructor_courses': {}}
+                               'instructor_dept_name': 'CS', 'instructor_courses': {'CS 501': 1, 'CS 546': 1, 'CS 570': 1}}
 
-        expected_prof_98761 = {'instructor_id': '98761', 'instructor_name': 'Edison, A', 'instructor_dept_name': 'SYEN',
-                               'instructor_courses': {}}
-
-        expected_prof_98760 = {'instructor_id': '98760', 'instructor_name': 'Darwin, C', 'instructor_dept_name': 'SYEN',
-                               'instructor_courses': {}}
-
-        test_prof(prof_98760, expected_prof_98760)
-        test_prof(prof_98761, expected_prof_98761)
         test_prof(prof_98762, expected_prof_98762)
         test_prof(prof_98763, expected_prof_98763)
         test_prof(prof_98764, expected_prof_98764)
-        test_prof(prof_98765, expected_prof_98765)
+
+    def test_verify_prof_data(self):
+        # instructor_table_db
+        BASE_URL = "../data/tst_data/"
+
+        query = '''
+        select i.cwid, i.Name, i.Dept, g.Course, COUNT(*) as student_count
+        from instructors i,
+             grades g
+        where i.CWID = g.InstructorCWID
+        group by i.CWID, g.Course;
+        '''
+
+        stevens_university = University("Stevens_01", "Stevens Institute of Technology", BASE_URL)
+        cursor = stevens_university.execute_query_on_prof_db(query)
+        db_prof_list = []
+        for row in cursor:
+            db_prof_list.append(row)
 
     def test_student_list(self):
         """This method is a tests the university method of the class"""
@@ -65,32 +68,26 @@ class TestUniversity(unittest.TestCase):
 
         student_10103 = std_list["10103"].student_details
         student_10115 = std_list["10115"].student_details
-        student_10172 = std_list["10172"].student_details
-        student_10175 = std_list["10175"].student_details
-        student_11658 = std_list["11658"].student_details
+        student_10183 = std_list["10183"].student_details
+        student_11714 = std_list["11714"].student_details
 
-        expected_student_10103 = {'student_id': '10103', 'student_name': 'Baldwin, C', 'student_major': 'SFEN',
-                                  'student_courses_taken': {'SSW 567': 'A', 'SSW 564': 'A-', 'SSW 687': 'B',
-                                                            'CS 501': 'B'}}
+        expected_student_10103 = {'student_id': '10103', 'student_name': 'Jobs, S', 'student_major': 'SFEN',
+                                  'student_courses_taken': {'CS 501': 'B', 'SSW 810': 'A-'}}
 
-        expected_student_10115 = {'student_id': '10115', 'student_name': 'Wyatt, X', 'student_major': 'SFEN',
-                                  'student_courses_taken': {'SSW 567': 'A', 'SSW 564': 'B+', 'SSW 687': 'A',
-                                                            'CS 545': 'A'}}
+        expected_student_10115 = {'student_id': '10115', 'student_name': 'Bezos, J', 'student_major': 'SFEN',
+                                  'student_courses_taken': {'SSW 810': 'A'}}
 
-        expected_student_10172 = {'student_id': '10172', 'student_name': 'Forbes, I', 'student_major': 'SFEN',
-                                  'student_courses_taken': {'SSW 555': 'A', 'SSW 567': 'A-'}}
+        expected_student_10183 = {'student_id': '10183', 'student_name': 'Musk, E', 'student_major': 'SFEN',
+                                  'student_courses_taken': {'SSW 555': 'A', 'SSW 810': 'A'}}
 
-        expected_student_10175 = {'student_id': '10175', 'student_name': 'Erickson, D', 'student_major': 'SFEN',
-                                  'student_courses_taken': {'SSW 567': 'A', 'SSW 564': 'A', 'SSW 687': 'B-'}}
-
-        expected_student_11658 = {'student_id': '11658', 'student_name': 'Kelly, P', 'student_major': 'SYEN',
-                                  'student_courses_taken': {}}
+        expected_student_11714 = {'student_id': '11714', 'student_name': 'Gates, B', 'student_major': 'CS',
+                                  'student_courses_taken': {'CS 546': 'A', 'CS 570': 'A-', 'SSW 810': 'B-'}}
 
         test_student(student_10103, expected_student_10103)
         test_student(student_10115, expected_student_10115)
-        test_student(student_10172, expected_student_10172)
-        test_student(student_10175, expected_student_10175)
-        test_student(student_11658, expected_student_11658)
+        test_student(student_10183, expected_student_10183)
+        test_student(student_11714, expected_student_11714)
 
-    if __name__ == '__main__':
-        unittest.main(exit=False, verbosity=2)
+
+if __name__ == '__main__':
+    unittest.main(exit=False, verbosity=2)
