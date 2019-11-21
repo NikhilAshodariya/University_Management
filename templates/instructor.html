@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>
+    Stevens University
+</h1>
+
+<h3>Number of students by course and instructor</h3>
+<!--    {{data}}-->
+    <table style="border: 1px solid black;">
+        <tr>
+            <th style="border: 1px solid black;">CWID</th>
+            <th  style="border: 1px solid black;">Name</th>
+            <th style="border: 1px solid black;">Department</th>
+            <th style="border: 1px solid black;">Courses</th>
+            <th style="border: 1px solid black;">Students</th>
+        </tr>
+        {% for row in data %}
+            <tr style="border: 1px solid black;">
+                <td  style="border: 1px solid black;">{{row[0]}}</td>
+                <td style="border: 1px solid black;">{{row[1]}}</td>
+                <td style="border: 1px solid black;">{{row[2]}}</td>
+                <td style="border: 1px solid black;">{{row[3]}}</td>
+                <td style="border: 1px solid black;">{{row[4]}}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% endblock content %}

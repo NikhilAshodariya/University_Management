@@ -125,6 +125,17 @@ class University:
         db = self._connect_to_prof_db("../data/SSW_810")
         return db.execute(query)
 
+    def get_inst_data(self, db_path):
+        db = self._connect_to_prof_db(db_path)
+        query = '''
+                select i.cwid, i.Name, i.Dept, g.Course, COUNT(*) as student_count
+                from instructors i,
+                     grades g
+                where i.CWID = g.InstructorCWID
+                group by i.CWID, g.Course;
+                '''
+        return db.execute(query)
+
     def instructor_table_db(self, db_path):
         db = self._connect_to_prof_db(db_path)
         x = PrettyTable()
